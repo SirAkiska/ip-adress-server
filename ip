@@ -1,0 +1,65 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jan 28 00:35:16 2023
+
+@author: erçe
+"""
+
+import tkinter as tk
+import datetime
+import socket
+from urllib.request import urlopen
+import re as r
+import os
+from tkinter import *
+from PIL import ImageTk, Image
+
+#yerel ip adresi için gerekli kod 
+kullanıcı= socket.gethostname() 
+ip_adresi = socket.gethostbyname(kullanıcı)
+#dinamik ip için gereken kod 
+
+def dinamikip():
+    d = str(urlopen('http://checkip.dyndns.com/')
+            .read())
+
+    return r.compile(r'Address: (\d+\.\d+\.\d+\.\d+)').search(d).group(1)
+
+
+
+dosya=open("ias.txt","w")
+dosya.write("\t"+"İSTENEN BİLGİLER"+"\n")
+dosya.write("Bilgisayar adı: "+kullanıcı+"\n")
+dosya.write("Yerel ip adresiniz: "+ip_adresi+"\n")
+dosya.write("Dinamik ip adressiniz: ")
+dosya.write(dinamikip())
+dosya.close
+
+    
+pencere=tk.Tk()
+pencere.geometry("500x600+550+100")
+pencere.title("IP ADRES SUNUCUSU by pulzar")
+pencere.configure(bg="white")
+başlık=tk.Label(text='İP ADRES SUNUCUSU',fg='magenta2',bg='white',font='Georgia 17 italic')
+başlık.pack()
+tus1=tk.Button(text="Çıkıs",fg='red1',bg='white',font='Impact 17',command=pencere.destroy,activebackground="red").place(x=200,y=400)
+
+label=Label(pencere)
+label.config(text="Hoşgeldiniz \n yerel ve dinamik ip adresinizi ögrenebilirsiniz.",font=("Georgia",10,"bold"),bg='white')
+label.place(x=40,y=50)
+label2=Label(pencere)
+label2.config(text="son güncelleme:24.02.23",font=("Georgia",10),bg='white',fg="steelblue2")
+label2.place(x=10,y=550)
+label3=Label(pencere)
+label3.config(text="PULZAR TECHNO CORP ",font=("Impact",25,"italic"),fg='Royalblue2',bg="white")
+label3.place(x=75,y=300)
+
+
+dosya = open("ias.txt","r")
+t1=tk.Text(font="Georgia 12 bold",bg="white",fg="turquoise1")
+t1.place(x=10,y=100,width=400,height=150)
+dosya_icerik = dosya.read()
+t1.insert(tk.END, dosya_icerik)
+
+
+pencere.mainloop()
